@@ -32,8 +32,8 @@ export default function Home() {
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -60%)',
-            width: '600px',
-            height: '600px',
+            width: 'min(600px, 150vw)',
+            height: 'min(600px, 150vw)',
             borderRadius: '50%',
             background: 'radial-gradient(circle, rgba(158,27,50,0.18) 0%, transparent 70%)',
             pointerEvents: 'none',
@@ -114,7 +114,7 @@ export default function Home() {
             <h1
               style={{
                 fontFamily: 'var(--font-display)',
-                fontSize: 'clamp(2.75rem, 7vw, 5.5rem)',
+                fontSize: 'clamp(2.2rem, 8vw, 5.5rem)',
                 letterSpacing: '-0.04em',
                 marginBottom: '1.25rem',
                 lineHeight: 1.05,

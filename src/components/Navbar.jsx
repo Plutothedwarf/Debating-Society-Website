@@ -101,13 +101,12 @@ export default function Navbar() {
           {/* ── Desktop nav links ── */}
           <ul
             style={{
-              display: 'flex',
               gap: 0,
               listStyle: 'none',
               margin: 0,
               padding: 0,
             }}
-            className="hidden lg:flex"
+            className="nav-desktop lg:flex"
           >
             {NAV_LINKS.map(({ to, label }) => (
               <li key={to}>
@@ -134,8 +133,8 @@ export default function Navbar() {
 
           {/* ── Desktop: theme toggle + hamburger ── */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            {/* Theme toggle — desktop only */}
-            <div className="hidden lg:flex">
+            {/* Theme toggle — visible on desktop header, moved to menu on mobile */}
+            <div className="nav-desktop">
               <ThemeToggle />
             </div>
 
@@ -147,7 +146,6 @@ export default function Navbar() {
               aria-expanded={open}
               aria-controls="mobile-menu"
               style={{
-                display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 gap: '5px',
@@ -159,7 +157,7 @@ export default function Navbar() {
                 minHeight: '44px',
                 alignItems: 'center',
               }}
-              className="lg:hidden"
+              className="nav-mobile lg:hidden"
             >
               <span style={{ display: 'block', width: '22px', height: '2px', backgroundColor: 'var(--color-ink)', transformOrigin: 'center', transition: 'transform 0.2s ease, opacity 0.2s ease', transform: open ? 'translateY(7px) rotate(45deg)' : 'none' }} />
               <span style={{ display: 'block', width: '22px', height: '2px', backgroundColor: 'var(--color-ink)', transition: 'opacity 0.2s ease', opacity: open ? 0 : 1 }} />
@@ -186,10 +184,9 @@ export default function Navbar() {
           transform: open ? 'translateX(0)' : 'translateX(100%)',
           transition: 'transform 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94)',
           borderTop: '1px solid var(--color-rule)',
-          display: 'flex',
           flexDirection: 'column',
         }}
-        className="lg:hidden"
+        className="nav-mobile lg:hidden"
       >
         <ul style={{ listStyle: 'none', margin: 0, padding: 0 }}>
           {NAV_LINKS.map(({ to, label }) => (

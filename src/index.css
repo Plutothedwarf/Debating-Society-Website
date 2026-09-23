@@ -80,9 +80,10 @@ video,
 html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
+  overflow-x: hidden;
 }
 
-body {
+body, #root {
   background-color: var(--color-paper);
   color: var(--color-ink);
   font-family: var(--font-sans);
@@ -93,6 +94,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   overflow-x: hidden;
+  width: 100%;
+  max-width: 100vw;
+}
+
+/* Fallback manual responsive classes in case Tailwind fails */
+.nav-desktop { display: none !important; }
+.nav-mobile { display: flex !important; }
+@media (min-width: 1024px) {
+  .nav-desktop { display: flex !important; }
+  .nav-mobile { display: none !important; }
 }
 
 /* Dark ink section — used for hero and CTA bands */
