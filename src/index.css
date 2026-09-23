@@ -1,0 +1,448 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,300;1,9..144,400&family=Source+Sans+3:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* =========================================================
+   ORDER PAPER — CSS CUSTOM PROPERTIES
+   All color references in components must use these tokens.
+   Never hardcode hex values in component files.
+   ========================================================= */
+:root {
+  --color-paper:     #FCFCFA;
+  --color-paper-warm:#F5F0E8;
+  --color-red:       #9E1B32;
+  --color-red-deep:  #7d1527;
+  --color-red-muted: rgba(158,27,50,0.07);
+  --color-ink:       #171512;
+  --color-ink-90:    rgba(23,21,18,0.9);
+  --color-rule:      #D8D2C4;
+  --color-brass:     #A6813C;
+  --color-brass-muted: rgba(166,129,60,0.1);
+  --color-chalk:     #6B6558;
+
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-sans:    'Source Sans 3', system-ui, sans-serif;
+
+  --rail-width-desktop: 30%;
+  --content-max: 72ch;
+  --section-gap: 5rem;
+
+  /* Theme transition speed */
+  --theme-transition: 220ms ease;
+}
+
+/* =========================================================
+   DARK MODE TOKEN OVERRIDES
+   Applied via [data-theme="dark"] on <html>
+   ========================================================= */
+[data-theme="dark"] {
+  --color-paper:       #1C1917;          /* warm dark bg */
+  --color-paper-warm:  #252118;          /* elevated surface */
+  --color-red:         #C4284A;          /* brighter claret — readable on dark */
+  --color-red-deep:    #9E1B32;          /* hover state */
+  --color-red-muted:   rgba(196,40,74,0.13);
+  --color-ink:         #EDE9E1;          /* warm off-white text */
+  --color-ink-90:      rgba(237,233,225,0.9);
+  --color-rule:        #302C28;          /* dark hairlines */
+  --color-brass:       #C49B4B;          /* brighter brass */
+  --color-brass-muted: rgba(196,155,75,0.12);
+  --color-chalk:       #9B9590;          /* lighter muted text */
+}
+
+/* Smooth color transitions when theme switches */
+*,
+*::before,
+*::after {
+  transition:
+    background-color var(--theme-transition),
+    border-color     var(--theme-transition),
+    color            var(--theme-transition),
+    box-shadow       var(--theme-transition);
+}
+
+/* Exceptions — don't transition things that should snap */
+img,
+svg,
+video,
+.op-rail--animate {
+  transition: none !important;
+}
+
+/* =========================================================
+   BASE RESETS
+   ========================================================= */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.65;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Dark ink section — used for hero and CTA bands */
+.section-dark {
+  background-color: var(--color-ink);
+  color: var(--color-paper);
+}
+
+.section-dark h1,
+.section-dark h2,
+.section-dark h3 {
+  color: var(--color-paper);
+}
+
+.section-dark p {
+  color: rgba(252, 252, 250, 0.72);
+}
+
+/* In dark mode: section-dark uses a deep near-black (NOT --color-ink which is now light) */
+[data-theme="dark"] .section-dark {
+  background-color: #0F0D0C;
+}
+[data-theme="dark"] .section-dark h1,
+[data-theme="dark"] .section-dark h2,
+[data-theme="dark"] .section-dark h3 {
+  color: #EDE9E1;
+}
+[data-theme="dark"] .section-dark p {
+  color: rgba(237, 233, 225, 0.68);
+}
+
+/* btn-primary-light on dark sections needs explicit fix in dark mode
+   (--color-paper is now dark #1C1917, so white bg must be hardcoded) */
+[data-theme="dark"] .btn-primary-light {
+  background-color: #EDE9E1;
+  border-color: #EDE9E1;
+  color: var(--color-red);
+}
+[data-theme="dark"] .btn-primary-light:hover {
+  background-color: transparent;
+  color: #EDE9E1;
+  border-color: #EDE9E1;
+}
+[data-theme="dark"] .btn-ghost-light {
+  color: rgba(237,233,225,0.75);
+  border-color: rgba(237,233,225,0.3);
+}
+[data-theme="dark"] .btn-ghost-light:hover {
+  color: #EDE9E1;
+  border-color: #EDE9E1;
+  background-color: rgba(237,233,225,0.08);
+}
+
+/* Warm section — subtle off-white alternating sections */
+.section-warm {
+  background-color: var(--color-paper-warm);
+}
+
+/* Red-tinted section — very subtle, for stats/highlights */
+.section-red-tint {
+  background-color: var(--color-red-muted);
+  border-top: 2px solid var(--color-red);
+  border-bottom: 2px solid var(--color-red);
+}
+
+/* =========================================================
+   TYPOGRAPHY BASE
+   ========================================================= */
+h1, h2, h3, h4, h5 {
+  font-family: var(--font-display);
+  color: var(--color-ink);
+  line-height: 1.12;
+  letter-spacing: -0.03em;
+  margin: 0;
+  font-weight: 500;
+}
+
+h1 { font-size: clamp(2.4rem, 6vw, 4.5rem); }
+h2 { font-size: clamp(1.75rem, 4vw, 3rem); }
+h3 { font-size: clamp(1.25rem, 2.5vw, 2rem); }
+h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
+
+p {
+  font-family: var(--font-sans);
+  color: var(--color-ink);
+  max-width: var(--content-max);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* =========================================================
+   ORDER PAPER RAIL
+   The structural left column carrying sequential info.
+   Animate only on homepage.
+   ========================================================= */
+.op-layout {
+  display: grid;
+  grid-template-columns: var(--rail-width-desktop) 1fr;
+  gap: 0;
+  width: 100%;
+}
+
+.op-rail {
+  border-right: 1px solid var(--color-rule);
+  padding-right: 2rem;
+  position: relative;
+}
+
+.op-main {
+  padding-left: 3rem;
+}
+
+@media (max-width: 1023px) {
+  .op-layout {
+    grid-template-columns: 1fr;
+  }
+  .op-rail {
+    border-right: none;
+    border-bottom: 1px solid var(--color-rule);
+    padding-right: 0;
+    padding-bottom: 0.75rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+  .op-main {
+    padding-left: 0;
+  }
+}
+
+/* Rail animation — homepage only, once on load */
+.op-rail--animate {
+  animation: railSettle 350ms cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+@keyframes railSettle {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* =========================================================
+   HAIRLINE DIVIDERS
+   ========================================================= */
+.rule {
+  border: none;
+  border-top: 1px solid var(--color-rule);
+  margin: 0;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+.btn-primary {
+  display: inline-block;
+  background-color: var(--color-red);
+  color: #FCFCFA;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.8rem 2rem;
+  border: 2px solid var(--color-red);
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.15s ease, box-shadow 0.18s ease;
+  text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary:hover {
+  background-color: var(--color-red-deep);
+  border-color: var(--color-red-deep);
+  box-shadow: 0 4px 16px rgba(158,27,50,0.28);
+}
+
+/* Light variant — for use on dark backgrounds */
+.btn-primary-light {
+  display: inline-block;
+  background-color: var(--color-paper);
+  color: var(--color-red);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.8rem 2rem;
+  border: 2px solid var(--color-paper);
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease;
+  text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.btn-primary-light:hover {
+  background-color: transparent;
+  color: var(--color-paper);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+.btn-secondary {
+  display: inline-block;
+  background-color: transparent;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  padding: 0.8rem 2rem;
+  border: 1.5px solid var(--color-rule);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease;
+  text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  white-space: nowrap;
+}
+
+.btn-secondary:hover {
+  border-color: var(--color-red);
+  color: var(--color-red);
+}
+
+/* Ghost button — for dark backgrounds */
+.btn-ghost-light {
+  display: inline-block;
+  background-color: transparent;
+  color: rgba(252,252,250,0.8);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.9375rem;
+  padding: 0.8rem 2rem;
+  border: 1.5px solid rgba(252,252,250,0.35);
+  cursor: pointer;
+  transition: border-color 0.15s ease, color 0.15s ease, background-color 0.15s ease;
+  text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  white-space: nowrap;
+}
+
+.btn-ghost-light:hover {
+  border-color: var(--color-paper);
+  color: var(--color-paper);
+  background-color: rgba(252,252,250,0.1);
+}
+
+/* =========================================================
+   RAIL LABEL TEXT (session number, dates, motion numbers)
+   ========================================================= */
+.rail-label {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  color: var(--color-chalk);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  line-height: 1.4;
+}
+
+.rail-label--red {
+  color: var(--color-red);
+  font-weight: 600;
+}
+
+/* =========================================================
+   SECTION SPACING
+   ========================================================= */
+.section {
+  padding: var(--section-gap) 0;
+}
+
+.section--sm {
+  padding: 2.5rem 0;
+}
+
+/* Container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding: 0 2rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding: 0 3rem;
+  }
+}
+
+/* =========================================================
+   MOTION NUMBER (Resources page, ballot style entries)
+   ========================================================= */
+.motion-num {
+  font-family: var(--font-sans);
+  font-variant-numeric: tabular-nums;
+  font-size: 0.8125rem;
+  color: var(--color-red);
+  font-weight: 600;
+  letter-spacing: 0;
+  min-width: 3.5rem;
+  display: inline-block;
+}
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+.text-chalk  { color: var(--color-chalk); }
+.text-red    { color: var(--color-red); }
+.text-brass  { color: var(--color-brass); }
+.text-ink    { color: var(--color-ink); }
+.text-paper  { color: var(--color-paper); }
+
+.font-display { font-family: var(--font-display); }
+.font-sans    { font-family: var(--font-sans); }
+
+/* Touch targets */
+@media (pointer: coarse) {
+  .btn-primary,
+  .btn-secondary,
+  button,
+  [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* Hover states desktop only */
+@media (hover: none) {
+  .hover-lift { transform: none !important; box-shadow: none !important; }
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--color-paper); }
+::-webkit-scrollbar-thumb { background: var(--color-rule); border-radius: 3px; }
