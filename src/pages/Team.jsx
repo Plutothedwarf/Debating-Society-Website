@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react';
 import { team, TIERS } from '../data/team';
+import { TIER_ACCENTS } from '../theme';
 
-// Deterministic avatar color from name for regular cards
+// Deterministic avatar color from name
 function avatarColor(name) {
-  const colors = ['#9E1B32', '#A6813C', '#6B6558', '#171512', '#4a6741', '#2d5986'];
+  const colors = ['#9E1B32', '#A6813C', '#6B6558', '#171512', '#2C5FAA', '#6B4E9E'];
   let hash = 0;
   for (let i = 0; i < name.length; i++) hash = name.charCodeAt(i) + ((hash << 5) - hash);
   return colors[Math.abs(hash) % colors.length];
@@ -13,23 +14,21 @@ function initials(name) {
   return name.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 }
 
-// Department Color Mapping for lively Kanban columns
-const tierColors = {
-  leadership: { bg: 'rgba(158, 27, 50, 0.04)', border: 'rgba(158, 27, 50, 0.5)', solid: '#9E1B32' }, // Red
-  debate:     { bg: 'rgba(45, 89, 134, 0.05)', border: 'rgba(45, 89, 134, 0.5)', solid: '#2d5986' }, // Blue
-  creatives:  { bg: 'rgba(74, 103, 65, 0.05)', border: 'rgba(74, 103, 65, 0.5)', solid: '#4a6741' }, // Green
-  pr:         { bg: 'rgba(166, 129, 60, 0.05)', border: 'rgba(166, 129, 60, 0.5)', solid: '#A6813C' }, // Gold
-  logistics:  { bg: 'rgba(107, 101, 88, 0.05)', border: 'rgba(107, 101, 88, 0.5)', solid: '#6B6558' }, // Brown
-  mentors:    { bg: 'rgba(255, 255, 255, 0.02)', border: 'rgba(255, 255, 255, 0.1)', solid: '#888' }, // Dark/Grey
-};
+// Get CSS variable value at runtime
+function getAccentColor(tierKey) {
+  const accent = TIER_ACCENTS[tierKey];
+  if (!accent) return { var: '--color-red', label: 'Team' };
+  return accent;
+}
 
 // Full detailed card for the Modal
 function MemberCard({ member }) {
   const bg = avatarColor(member.name);
+  const accent = getAccentColor(member.tier);
+
   return (
     <article
       style={{
-        border: '1px solid var(--color-rule)',
         padding: '2rem',
         display: 'flex',
         flexDirection: 'column',
@@ -37,10 +36,24 @@ function MemberCard({ member }) {
         borderRadius: '16px',
         boxShadow: '0 20px 40px rgba(0,0,0,0.4)',
         position: 'relative',
+        overflow: 'hidden',
       }}
       className="member-card-modal"
       aria-label={`${member.name}, ${member.role}`}
     >
+      {/* Accent top border */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '4px',
+          background: `var(${accent.var})`,
+        }}
+      />
+
       <div
         style={{
           width: '72px',
@@ -52,7 +65,7 @@ function MemberCard({ member }) {
           justifyContent: 'center',
           marginBottom: '1.25rem',
           flexShrink: 0,
-          border: '2px solid rgba(255,255,255,0.1)'
+          border: `2px solid var(${accent.var})`,
         }}
         aria-hidden="true"
       >
@@ -63,9 +76,27 @@ function MemberCard({ member }) {
       <p style={{ fontFamily: 'var(--font-display)', fontSize: '1.5rem', letterSpacing: '-0.02em', color: 'var(--color-ink)', margin: '0 0 0.25rem 0' }}>
         {member.name}
       </p>
-      <p className="rail-label" style={{ color: 'var(--color-red)', marginBottom: '1rem', fontSize: '0.85rem' }}>
+      <p className="rail-label" style={{ color: `var(${accent.var})`, marginBottom: '0.5rem', fontSize: '0.85rem' }}>
         {member.role}
       </p>
+      {/* Department tag */}
+      <span
+        style={{
+          fontFamily: 'var(--font-sans)',
+          fontSize: '0.7rem',
+          fontWeight: 600,
+          color: `var(${accent.var})`,
+          backgroundColor: `color-mix(in srgb, var(${accent.var}) 10%, transparent)`,
+          padding: '0.2rem 0.6rem',
+          borderRadius: '100px',
+          border: `1px solid color-mix(in srgb, var(${accent.var}) 25%, transparent)`,
+          display: 'inline-block',
+          marginBottom: '1rem',
+          width: 'fit-content',
+        }}
+      >
+        {accent.label}
+      </span>
       <div style={{ width: '100%', height: '1px', backgroundColor: 'var(--color-rule)', marginBottom: '1rem' }} />
       <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.9375rem', color: 'var(--color-chalk)', lineHeight: 1.7, margin: 0 }}>
         {member.bio}
@@ -74,10 +105,10 @@ function MemberCard({ member }) {
   );
 }
 
-// Compact card for the Kanban Board
-function KanbanCard({ member, onClick, tierColor }) {
+// Compact card for the Kanban Board — glass nameplate
+function KanbanCard({ member, onClick, accentVar }) {
   const isHead = member.isHead || member.tier === 'leadership';
-  
+
   return (
     <button
       className={`kanban-card ${isHead ? 'kanban-card-head' : ''}`}
@@ -86,28 +117,28 @@ function KanbanCard({ member, onClick, tierColor }) {
       style={{
         display: 'flex',
         alignItems: 'center',
-        padding: isHead ? '0.6rem 0.5rem' : '0.4rem 0.5rem',
+        padding: isHead ? '0.65rem 0.6rem' : '0.45rem 0.5rem',
         borderRadius: '8px',
         backgroundColor: isHead ? 'rgba(255,255,255,0.06)' : 'rgba(255,255,255,0.02)',
-        border: `1px solid ${isHead ? tierColor.border : 'rgba(255,255,255,0.05)'}`,
-        boxShadow: isHead ? `0 2px 10px ${tierColor.bg}` : 'none',
+        border: `1px solid ${isHead ? `color-mix(in srgb, var(${accentVar}) 40%, transparent)` : 'rgba(255,255,255,0.05)'}`,
         cursor: 'pointer',
         transition: 'all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1)',
         width: '100%',
         textAlign: 'left',
         marginBottom: '0.35rem',
         position: 'relative',
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
     >
-      {/* Decorative gradient for heads */}
+      {/* Accent left bar for heads */}
       {isHead && (
         <div style={{
-          position: 'absolute', top: 0, left: 0, width: '4px', height: '100%',
-          backgroundColor: tierColor.solid,
+          position: 'absolute', top: 0, left: 0, width: '3px', height: '100%',
+          backgroundColor: `var(${accentVar})`,
+          borderRadius: '3px 0 0 3px',
         }} />
       )}
-      
+
       <div
         style={{
           width: isHead ? '36px' : '28px',
@@ -118,9 +149,9 @@ function KanbanCard({ member, onClick, tierColor }) {
           alignItems: 'center',
           justifyContent: 'center',
           marginRight: '0.75rem',
-          marginLeft: isHead ? '4px' : '0',
+          marginLeft: isHead ? '6px' : '0',
           flexShrink: 0,
-          border: isHead ? `2px solid ${tierColor.solid}` : '1px solid rgba(255,255,255,0.1)',
+          border: isHead ? `2px solid var(${accentVar})` : '1px solid rgba(255,255,255,0.1)',
         }}
       >
         <span style={{ fontFamily: 'var(--font-sans)', fontSize: isHead ? '0.75rem' : '0.65rem', fontWeight: 600, color: '#FCFCFA' }}>
@@ -128,25 +159,25 @@ function KanbanCard({ member, onClick, tierColor }) {
         </span>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
-        <span style={{ 
-          fontFamily: 'var(--font-sans)', 
-          fontSize: isHead ? '0.95rem' : '0.85rem', 
-          fontWeight: isHead ? 600 : 500, 
-          color: isHead ? 'var(--color-ink)' : 'var(--color-ink)',
+        <span style={{
+          fontFamily: 'var(--font-sans)',
+          fontSize: isHead ? '0.95rem' : '0.85rem',
+          fontWeight: isHead ? 600 : 500,
+          color: 'var(--color-ink)',
           whiteSpace: 'nowrap',
           overflow: 'hidden',
-          textOverflow: 'ellipsis'
+          textOverflow: 'ellipsis',
         }}>
           {member.name}
         </span>
-        <span style={{ 
-          fontFamily: 'var(--font-sans)', 
-          fontSize: '0.7rem', 
-          color: isHead ? tierColor.solid : 'var(--color-chalk)',
+        <span style={{
+          fontFamily: 'var(--font-sans)',
+          fontSize: '0.7rem',
+          color: isHead ? `var(${accentVar})` : 'var(--color-chalk)',
           fontWeight: isHead ? 500 : 400,
           whiteSpace: 'nowrap',
           overflow: 'hidden',
-          textOverflow: 'ellipsis'
+          textOverflow: 'ellipsis',
         }}>
           {member.role}
         </span>
@@ -155,9 +186,8 @@ function KanbanCard({ member, onClick, tierColor }) {
   );
 }
 
-// Column for the Kanban Board
+// Column for the Kanban Board — accent-colored top border
 function KanbanColumn({ tier, members, onMemberClick }) {
-  // Sort heads to the top of the column
   const sortedMembers = [...members].sort((a, b) => {
     if (a.isHead && !b.isHead) return -1;
     if (!a.isHead && b.isHead) return 1;
@@ -166,42 +196,51 @@ function KanbanColumn({ tier, members, onMemberClick }) {
 
   const heads = sortedMembers.filter(m => m.isHead || tier.key === 'leadership');
   const regulars = sortedMembers.filter(m => !m.isHead && tier.key !== 'leadership');
-  const colors = tierColors[tier.key] || tierColors.mentors;
+  const accent = getAccentColor(tier.key);
 
   return (
-    <div style={{
-      width: '100%',
-      minWidth: '260px',
-      maxWidth: '300px',
-      flex: '1 1 260px', // Allow flex wrapping gracefully
-      backgroundColor: colors.bg,
-      borderTop: `4px solid ${colors.solid}`,
-      borderRight: '1px solid rgba(255,255,255,0.05)',
-      borderBottom: '1px solid rgba(255,255,255,0.05)',
-      borderLeft: '1px solid rgba(255,255,255,0.05)',
-      borderRadius: '12px',
-      padding: '1.25rem',
-      display: 'flex',
-      flexDirection: 'column',
-      backdropFilter: 'blur(10px)',
-    }}>
+    <div
+      className="glass"
+      style={{
+        width: '100%',
+        minWidth: '260px',
+        maxWidth: '300px',
+        flex: '1 1 260px',
+        borderTop: `4px solid var(${accent.var})`,
+        borderRadius: '12px',
+        padding: '1.25rem',
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       {/* Column Header */}
       <div style={{ marginBottom: '1.5rem' }}>
-        <h3 style={{ 
-          fontFamily: 'var(--font-display)', 
-          fontSize: '1.25rem', 
-          color: 'var(--color-ink)', 
-          margin: '0 0 0.25rem 0',
-          letterSpacing: '-0.02em'
+        <h3 style={{
+          fontFamily: 'var(--font-display)',
+          fontSize: '1.25rem',
+          color: 'var(--color-ink)',
+          margin: '0 0 0.35rem 0',
+          letterSpacing: '-0.02em',
         }}>
           {tier.label}
         </h3>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-          <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', fontWeight: 600, color: colors.solid, background: 'rgba(255,255,255,0.1)', padding: '0.1rem 0.5rem', borderRadius: '20px' }}>
+          <span
+            style={{
+              fontFamily: 'var(--font-sans)',
+              fontSize: '0.7rem',
+              fontWeight: 600,
+              color: `var(${accent.var})`,
+              background: `color-mix(in srgb, var(${accent.var}) 12%, transparent)`,
+              padding: '0.15rem 0.55rem',
+              borderRadius: '100px',
+              border: `1px solid color-mix(in srgb, var(${accent.var}) 20%, transparent)`,
+            }}
+          >
             {members.length}
           </span>
           <span style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'var(--color-chalk)' }}>
-            Total Members
+            {accent.label}
           </span>
         </div>
       </div>
@@ -209,16 +248,16 @@ function KanbanColumn({ tier, members, onMemberClick }) {
       {/* Heads Section */}
       {heads.length > 0 && (
         <div style={{ marginBottom: '1.5rem' }}>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', color: 'var(--color-chalk)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
-            Department Head{heads.length > 1 ? 's' : ''}
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.04em', color: 'var(--color-chalk)', marginBottom: '0.5rem' }}>
+            {tier.key === 'leadership' ? 'Council' : `Department head${heads.length > 1 ? 's' : ''}`}
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
             {heads.map(member => (
-              <KanbanCard 
-                key={member.id} 
-                member={member} 
-                tierColor={colors}
-                onClick={() => onMemberClick(member)} 
+              <KanbanCard
+                key={member.id}
+                member={member}
+                accentVar={accent.var}
+                onClick={() => onMemberClick(member)}
               />
             ))}
           </div>
@@ -228,16 +267,16 @@ function KanbanColumn({ tier, members, onMemberClick }) {
       {/* Members Section */}
       {regulars.length > 0 && (
         <div>
-          <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', fontWeight: 700, letterSpacing: '0.1em', color: 'var(--color-chalk)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.65rem', fontWeight: 600, letterSpacing: '0.04em', color: 'var(--color-chalk)', marginBottom: '0.5rem' }}>
             Members
           </p>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
             {regulars.map(member => (
-              <KanbanCard 
-                key={member.id} 
-                member={member} 
-                tierColor={colors}
-                onClick={() => onMemberClick(member)} 
+              <KanbanCard
+                key={member.id}
+                member={member}
+                accentVar={accent.var}
+                onClick={() => onMemberClick(member)}
               />
             ))}
           </div>
@@ -248,7 +287,7 @@ function KanbanColumn({ tier, members, onMemberClick }) {
 }
 
 export default function Team() {
-  useEffect(() => { document.title = 'Team — Somaiya Debating Society'; }, []);
+  useEffect(() => { document.title = 'Team \u2014 Somaiya Debating Society'; }, []);
 
   const [selectedMember, setSelectedMember] = useState(null);
 
@@ -262,6 +301,9 @@ export default function Team() {
               <p className="rail-label" style={{ color: 'var(--color-ink)', marginTop: '0.25rem' }}>Team</p>
             </aside>
             <div className="op-main">
+              <div className="section-marker--gold section-marker">
+                <span>The committee</span>
+              </div>
               <h1 style={{ marginBottom: '0.5rem' }}>The Committee</h1>
               <p style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-chalk)', fontSize: '1.1rem' }}>
                 Meet the passionate individuals driving the Somaiya Debating Society.
@@ -275,33 +317,29 @@ export default function Team() {
       <section className="fade-in-section" style={{ paddingBottom: '5rem' }}>
         <div className="container">
           <div className="op-layout">
-            {/* Hide Rail on Desktop to Maximize Board Space */}
             <aside className="op-rail" style={{ display: 'none' }}></aside>
-            
+
             <div className="op-main" style={{ width: '100%', maxWidth: '100%', gridColumn: 'span 12' }}>
-              
-              {/* Wrapping Kanban Board */}
               <div className="kanban-board" style={{
                 display: 'flex',
                 gap: '1.25rem',
-                flexWrap: 'wrap', // FIX for cut-off issue, allows columns to stack nicely
-                justifyContent: 'center', // Center them on large screens
+                flexWrap: 'wrap',
+                justifyContent: 'center',
               }}>
                 {TIERS.map(tier => {
                   const membersInTier = team.filter(m => m.tier === tier.key);
                   if (membersInTier.length === 0) return null;
 
                   return (
-                    <KanbanColumn 
-                      key={tier.key} 
-                      tier={tier} 
-                      members={membersInTier} 
-                      onMemberClick={setSelectedMember} 
+                    <KanbanColumn
+                      key={tier.key}
+                      tier={tier}
+                      members={membersInTier}
+                      onMemberClick={setSelectedMember}
                     />
                   );
                 })}
               </div>
-
             </div>
           </div>
         </div>
@@ -309,7 +347,7 @@ export default function Team() {
 
       {/* MODAL FOR MEMBER DETAILS */}
       {selectedMember && (
-        <div 
+        <div
           className="modal-overlay fade-in-section"
           style={{
             position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh',
@@ -321,27 +359,27 @@ export default function Team() {
           aria-modal="true"
           role="dialog"
         >
-          <div 
+          <div
             onClick={e => e.stopPropagation()}
             style={{ maxWidth: '440px', width: '100%', position: 'relative' }}
           >
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setSelectedMember(null)}
               style={{
                 position: 'absolute', top: '1rem', right: '1rem',
                 background: 'rgba(255,255,255,0.1)', border: 'none', borderRadius: '50%',
                 width: '32px', height: '32px', display: 'flex', alignItems: 'center', justifyContent: 'center',
                 color: 'var(--color-ink)', cursor: 'pointer', zIndex: 10,
-                transition: 'background 0.2s'
+                transition: 'background 0.2s',
               }}
               onMouseEnter={e => e.target.style.background = 'rgba(220, 53, 69, 0.8)'}
               onMouseLeave={e => e.target.style.background = 'rgba(255,255,255,0.1)'}
               aria-label="Close"
             >
-              ✕
+              &#10005;
             </button>
-            
+
             <MemberCard member={selectedMember} />
           </div>
         </div>
@@ -352,18 +390,18 @@ export default function Team() {
           from { opacity: 0; transform: translateY(5px); }
           to { opacity: 1; transform: translateY(0); }
         }
-        
+
         .fade-in-section {
           animation: fadeIn 0.35s ease-out forwards;
         }
 
-        /* Card Hover Effects */
+        /* Card Hover Effects — accent glow */
         .kanban-card:hover {
           background-color: rgba(255, 255, 255, 0.08) !important;
           transform: translateY(-2px);
           box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
-        
+
         .kanban-card-head:hover {
           transform: translateY(-2px) scale(1.02);
           box-shadow: 0 6px 20px rgba(0,0,0,0.2) !important;

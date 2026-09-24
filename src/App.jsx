@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { ThemeProvider } from './context/ThemeContext';
 import Navbar from './components/Navbar';
+import MotionTicker from './components/MotionTicker';
 import Footer from './components/Footer';
 
 // Pages
@@ -26,6 +27,7 @@ function AppLayout() {
   return (
     <>
       <ScrollToTop />
+      <MotionTicker />
       <Navbar />
       <main id="main-content" role="main">
         <Routes>

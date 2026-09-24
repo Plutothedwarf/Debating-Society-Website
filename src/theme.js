@@ -18,8 +18,18 @@ export const SITE = {
 };
 
 export const STATS = [
-  { value: '5+',   label: 'Years Active' },
-  { value: '150+', label: 'Members' },
-  { value: '20+',  label: 'Tournaments' },
-  { value: '12',   label: 'Awards Won' },
+  { value: '5+',   label: 'Years Active',  numericEnd: 5 },
+  { value: '150+', label: 'Members',        numericEnd: 150 },
+  { value: '20+',  label: 'Tournaments',    numericEnd: 20 },
+  { value: '12',   label: 'Awards Won',     numericEnd: 12 },
 ];
+
+// Delegate Glass — tier-to-accent CSS variable map
+export const TIER_ACCENTS = {
+  leadership: { var: '--color-gold',   label: 'Council' },
+  debate:     { var: '--color-red',    label: 'Executive Team' },
+  creatives:  { var: '--color-violet', label: 'Creatives' },
+  pr:         { var: '--color-teal',   label: 'PR and Marketing' },
+  logistics:  { var: '--color-cobalt', label: 'Logistics' },
+  mentors:    { var: '--color-gold',   label: 'Mentors' },
+};

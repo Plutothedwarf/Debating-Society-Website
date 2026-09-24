@@ -29,7 +29,7 @@ const values = [
 ];
 
 export default function About() {
-  useEffect(() => { document.title = 'About — Somaiya Debating Society'; }, []);
+  useEffect(() => { document.title = 'About \u2014 Somaiya Debating Society'; }, []);
 
   return (
     <>
@@ -59,6 +59,9 @@ export default function About() {
               <p className="rail-label" style={{ color: 'var(--color-ink)', marginTop: '0.25rem' }}>Our History</p>
             </aside>
             <div className="op-main">
+              <div className="section-marker">
+                <span>Our history</span>
+              </div>
               <h2 style={{ marginBottom: '1.5rem' }}>Where we began</h2>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
                 <p style={{ fontFamily: 'var(--font-sans)', lineHeight: 1.75, color: 'var(--color-chalk)' }}>
@@ -76,6 +79,44 @@ export default function About() {
         </div>
       </section>
 
+      {/* =====================================================
+          PULL-QUOTE — dark Ink section, Fraunces italic, Brass
+          ===================================================== */}
+      <section
+        className="section-dark"
+        style={{ paddingTop: '4.5rem', paddingBottom: '4.5rem' }}
+        aria-label="Pull quote"
+      >
+        <div className="container">
+          <div style={{ maxWidth: '48ch', margin: '0 auto', textAlign: 'center' }}>
+            <p
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontStyle: 'italic',
+                fontSize: 'clamp(1.5rem, 3.5vw, 2.25rem)',
+                lineHeight: 1.35,
+                letterSpacing: '-0.02em',
+                color: 'var(--color-brass)',
+                margin: 0,
+                fontWeight: 300,
+              }}
+            >
+              A good argument, clearly made, changes minds. That is the conviction this society was built on.
+            </p>
+            <div
+              aria-hidden="true"
+              style={{
+                width: '32px',
+                height: '2.5px',
+                backgroundColor: 'var(--color-brass)',
+                margin: '2rem auto 0',
+                opacity: 0.5,
+              }}
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Mission and values */}
       <section style={{ paddingTop: '4rem', paddingBottom: '4rem', borderBottom: '1px solid var(--color-rule)' }}>
         <div className="container">
@@ -85,6 +126,9 @@ export default function About() {
               <p className="rail-label" style={{ color: 'var(--color-ink)', marginTop: '0.25rem' }}>Mission</p>
             </aside>
             <div className="op-main">
+              <div className="section-marker--gold section-marker">
+                <span>Mission and values</span>
+              </div>
               <h2 style={{ marginBottom: '0.75rem' }}>Mission and values</h2>
               <p style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-chalk)', marginBottom: '2.5rem', lineHeight: 1.7 }}>
                 Our mission is to create a space where students develop the skills and habits of mind that formal debate demands — critical thinking, clear communication, and the confidence to stand and be challenged.
@@ -131,6 +175,9 @@ export default function About() {
               <p className="rail-label" style={{ color: 'var(--color-ink)', marginTop: '0.25rem' }}>Affiliations</p>
             </aside>
             <div className="op-main">
+              <div className="section-marker--brass section-marker">
+                <span>Affiliations</span>
+              </div>
               <h2 style={{ marginBottom: '1.75rem' }}>Affiliations</h2>
               <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
                 {[
@@ -168,6 +215,9 @@ export default function About() {
               <p className="rail-label" style={{ color: 'var(--color-ink)', marginTop: '0.25rem' }}>Timeline</p>
             </aside>
             <div className="op-main">
+              <div className="section-marker--gold section-marker">
+                <span>Timeline</span>
+              </div>
               <h2 style={{ marginBottom: '2rem' }}>Milestones</h2>
               <div style={{ position: 'relative' }}>
                 {milestones.map(({ year, text }, i) => (

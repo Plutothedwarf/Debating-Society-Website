@@ -22,6 +22,12 @@
   --color-brass-muted: rgba(166,129,60,0.1);
   --color-chalk:     #6B6558;
 
+  /* Delegate Glass — committee accent tokens */
+  --color-cobalt:    #2C5FAA;
+  --color-violet:    #6B4E9E;
+  --color-teal:      #1B8A8A;
+  --color-gold:      #C9A227;
+
   --font-display: 'Fraunces', Georgia, serif;
   --font-sans:    'Source Sans 3', system-ui, sans-serif;
 
@@ -49,6 +55,12 @@
   --color-brass:       #C49B4B;          /* brighter brass */
   --color-brass-muted: rgba(196,155,75,0.12);
   --color-chalk:       #9B9590;          /* lighter muted text */
+
+  /* Delegate Glass — brighter accents for dark backgrounds */
+  --color-cobalt:      #4A7FCC;
+  --color-violet:      #8B6EC0;
+  --color-teal:        #2AADAD;
+  --color-gold:        #DDBA40;
 }
 
 /* Smooth color transitions when theme switches */
@@ -181,9 +193,9 @@ h1, h2, h3, h4, h5 {
   font-weight: 500;
 }
 
-h1 { font-size: clamp(2.4rem, 6vw, 4.5rem); }
-h2 { font-size: clamp(1.75rem, 4vw, 3rem); }
-h3 { font-size: clamp(1.25rem, 2.5vw, 2rem); }
+h1 { font-size: clamp(2.6rem, 7vw, 5.25rem); }
+h2 { font-size: clamp(1.85rem, 4.5vw, 3.5rem); }
+h3 { font-size: clamp(1.3rem, 2.5vw, 2.15rem); }
 h4 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
 
 p {
@@ -457,3 +469,192 @@ a {
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-paper); }
 ::-webkit-scrollbar-thumb { background: var(--color-rule); border-radius: 3px; }
+
+/* =========================================================
+   DELEGATE GLASS — glass treatment
+   Applied ONLY to: Navbar (scrolled), event highlight, team cards
+   ========================================================= */
+.glass {
+  background: rgba(252, 252, 250, 0.72);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(216, 210, 196, 0.4);
+}
+
+[data-theme="dark"] .glass {
+  background: rgba(28, 25, 23, 0.75);
+  border-color: rgba(48, 44, 40, 0.6);
+}
+
+/* Fallback for devices without backdrop-filter */
+@supports not (backdrop-filter: blur(14px)) {
+  .glass {
+    background: rgba(252, 252, 250, 0.95);
+  }
+  [data-theme="dark"] .glass {
+    background: rgba(28, 25, 23, 0.95);
+  }
+}
+
+/* =========================================================
+   SECTION MARKERS — short color rule + sentence-case label
+   ========================================================= */
+.section-marker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 2rem;
+}
+
+.section-marker::before {
+  content: '';
+  display: block;
+  width: 28px;
+  height: 2.5px;
+  background-color: var(--color-red);
+  flex-shrink: 0;
+}
+
+.section-marker span {
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-chalk);
+  letter-spacing: 0;
+}
+
+/* Accent color variants for section markers */
+.section-marker--cobalt::before  { background-color: var(--color-cobalt); }
+.section-marker--violet::before  { background-color: var(--color-violet); }
+.section-marker--teal::before    { background-color: var(--color-teal); }
+.section-marker--gold::before    { background-color: var(--color-gold); }
+.section-marker--brass::before   { background-color: var(--color-brass); }
+
+/* =========================================================
+   PILL CTA — rounded departure from sharp aesthetic
+   ========================================================= */
+.btn-pill {
+  display: inline-block;
+  background-color: var(--color-red);
+  color: #FCFCFA;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.85rem 2.25rem;
+  border: 2px solid var(--color-red);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background-color 0.18s ease, transform 0.15s ease, box-shadow 0.25s ease;
+  text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.btn-pill:hover {
+  background-color: var(--color-red-deep);
+  border-color: var(--color-red-deep);
+  box-shadow: 0 4px 24px rgba(158, 27, 50, 0.35);
+}
+
+.btn-pill-light {
+  display: inline-block;
+  background-color: var(--color-paper);
+  color: var(--color-red);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.9375rem;
+  padding: 0.85rem 2.25rem;
+  border: 2px solid var(--color-paper);
+  border-radius: 100px;
+  cursor: pointer;
+  transition: background-color 0.18s ease, color 0.18s ease, box-shadow 0.25s ease;
+  text-decoration: none;
+  min-height: 44px;
+  min-width: 44px;
+  white-space: nowrap;
+  letter-spacing: 0.01em;
+}
+
+.btn-pill-light:hover {
+  background-color: transparent;
+  color: var(--color-paper);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .btn-pill-light {
+  background-color: #EDE9E1;
+  border-color: #EDE9E1;
+  color: var(--color-red);
+}
+[data-theme="dark"] .btn-pill-light:hover {
+  background-color: transparent;
+  color: #EDE9E1;
+  border-color: #EDE9E1;
+}
+
+/* =========================================================
+   MOTION TICKER — thin bar at top of every page
+   ========================================================= */
+.motion-ticker {
+  width: 100%;
+  overflow: hidden;
+  background-color: var(--color-red);
+  position: relative;
+  height: 32px;
+  display: flex;
+  align-items: center;
+}
+
+.motion-ticker__track {
+  display: flex;
+  white-space: nowrap;
+  animation: tickerScroll 60s linear infinite;
+  will-change: transform;
+}
+
+.motion-ticker__item {
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 400;
+  color: #FCFCFA;
+  padding: 0 2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 2rem;
+  flex-shrink: 0;
+}
+
+.motion-ticker__item::after {
+  content: '\00B7';
+  opacity: 0.5;
+}
+
+@keyframes tickerScroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* =========================================================
+   PREFERS-REDUCED-MOTION — respect user preference
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  .motion-ticker__track {
+    animation: none !important;
+  }
+  .parallax-layer {
+    transform: none !important;
+  }
+  .hero-drift {
+    animation: none !important;
+  }
+}
+
+/* =========================================================
+   ACCENT UTILITY CLASSES
+   ========================================================= */
+.text-cobalt  { color: var(--color-cobalt); }
+.text-violet  { color: var(--color-violet); }
+.text-teal    { color: var(--color-teal); }
+.text-gold    { color: var(--color-gold); }

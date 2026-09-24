@@ -70,7 +70,7 @@ function EventCard({ event, muted }) {
           {event.status === 'upcoming' && (
             <a
               href={event.registerUrl}
-              className="btn-primary"
+              className="btn-pill"
               id={`register-${event.id}`}
               target="_blank"
               rel="noopener noreferrer"
@@ -141,6 +141,9 @@ export default function Events() {
               </p>
             </aside>
             <div className="op-main">
+              <div className="section-marker">
+                <span>Upcoming events</span>
+              </div>
               <h2 style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', marginBottom: '0.5rem' }}>
                 Upcoming events
               </h2>
@@ -190,6 +193,9 @@ export default function Events() {
                 </p>
               </aside>
               <div className="op-main">
+                <div className="section-marker" style={{ marginTop: '0.5rem' }}>
+                  <span>Past events</span>
+                </div>
                 <h2 style={{ fontSize: 'clamp(1.25rem, 2.5vw, 1.75rem)', marginBottom: '0.5rem' }}>
                   Past events
                 </h2>

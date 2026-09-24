@@ -181,6 +181,9 @@ export default function Gallery() {
               </p>
             </aside>
             <div className="op-main">
+              <div className="section-marker">
+                <span>Gallery</span>
+              </div>
               <h1>Gallery</h1>
               <p style={{ fontFamily: 'var(--font-sans)', color: 'var(--color-chalk)', marginTop: '0.75rem', margin: '0.75rem 0 0 0' }}>
                 Moments from tournaments, workshops, and society events.
@@ -229,9 +232,23 @@ export default function Gallery() {
                     height: '100%',
                     objectFit: 'cover',
                     display: 'block',
-                    transition: 'transform 0.2s ease',
+                    transition: 'transform 0.35s ease',
                   }}
                   className="gallery-img"
+                />
+                {/* Accent overlay on hover */}
+                <div
+                  className="gallery-overlay"
+                  aria-hidden="true"
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    backgroundColor: 'var(--color-red)',
+                    opacity: 0,
+                    transition: 'opacity 0.35s ease',
+                    pointerEvents: 'none',
+                    mixBlendMode: 'multiply',
+                  }}
                 />
               </button>
             ))}
@@ -254,7 +271,10 @@ export default function Gallery() {
       <style>{`
         @media (hover: hover) {
           .gallery-item:hover .gallery-img {
-            transform: scale(1.04);
+            transform: scale(1.06);
+          }
+          .gallery-item:hover .gallery-overlay {
+            opacity: 0.2 !important;
           }
         }
 

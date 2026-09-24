@@ -34,67 +34,71 @@ const FOOTER_LINKS = [
   { to: '/contact',   label: 'Contact' },
 ];
 
+function scrollToTop() {
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
 export default function Footer() {
   const year = new Date().getFullYear();
 
   return (
     <footer
+      className="section-dark"
       style={{
-        borderTop: '1px solid var(--color-rule)',
-        backgroundColor: 'var(--color-paper)',
-        marginTop: '5rem',
+        marginTop: '0',
       }}
       role="contentinfo"
     >
-      <div className="container" style={{ paddingTop: '3rem', paddingBottom: '2.5rem' }}>
-        {/* Top section */}
+      <div className="container" style={{ paddingTop: '4.5rem', paddingBottom: '3rem' }}>
+        {/* Large wordmark */}
+        <div style={{ marginBottom: '3rem' }}>
+          <Link
+            to="/"
+            style={{
+              textDecoration: 'none',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '1rem',
+            }}
+          >
+            <img
+              src="/logo.png"
+              alt="Somaiya Debating Society logo"
+              style={{
+                width: '56px',
+                height: '56px',
+                objectFit: 'cover',
+                borderRadius: '50%',
+                flexShrink: 0,
+                boxShadow: '0 0 0 2px rgba(158,27,50,0.5)',
+              }}
+            />
+            <span style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: 'clamp(1.5rem, 3vw, 2.25rem)',
+              fontWeight: 500,
+              letterSpacing: '-0.03em',
+              lineHeight: 1.1,
+            }}>
+              <span style={{ display: 'block', color: '#FCFCFA' }}>Somaiya</span>
+              <span style={{ display: 'block', color: 'var(--color-red)', fontSize: '0.75em' }}>
+                Debating Society
+              </span>
+            </span>
+          </Link>
+        </div>
+
+        {/* Main grid: links + social */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'auto 1fr auto',
+            gridTemplateColumns: '1fr auto',
             gap: '3rem',
             alignItems: 'start',
-            marginBottom: '2.5rem',
+            marginBottom: '3rem',
           }}
           className="footer-grid"
         >
-          {/* Wordmark + tagline */}
-          <div style={{ maxWidth: '260px' }}>
-            <Link
-              to="/"
-              style={{
-                textDecoration: 'none',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.625rem',
-                marginBottom: '0.75rem',
-              }}
-            >
-              <img
-                src="/logo.png"
-                alt="Somaiya Debating Society logo"
-                style={{ width: '36px', height: '36px', objectFit: 'cover', borderRadius: '50%', flexShrink: 0 }}
-              />
-              <span style={{ fontFamily: 'var(--font-display)', fontSize: '1.05rem', fontWeight: 500, letterSpacing: '-0.02em', color: 'var(--color-ink)', lineHeight: 1.2 }}>
-                <span style={{ display: 'block' }}>Somaiya</span>
-                <span style={{ display: 'block', color: 'var(--color-red)', fontSize: '0.8rem' }}>Debating Society</span>
-              </span>
-            </Link>
-            <p
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: '0.875rem',
-                color: 'var(--color-chalk)',
-                lineHeight: 1.6,
-                margin: 0,
-                maxWidth: '100%',
-              }}
-            >
-              K.J. Somaiya College of Engineering<br />
-              Vidyavihar, Mumbai 400077
-            </p>
-          </div>
-
           {/* Navigation links */}
           <nav aria-label="Footer navigation">
             <ul
@@ -104,7 +108,7 @@ export default function Footer() {
                 padding: 0,
                 display: 'flex',
                 flexWrap: 'wrap',
-                gap: '0.25rem 2rem',
+                gap: '0.5rem 2.5rem',
               }}
             >
               {FOOTER_LINKS.map(({ to, label }) => (
@@ -113,15 +117,15 @@ export default function Footer() {
                     to={to}
                     style={{
                       fontFamily: 'var(--font-sans)',
-                      fontSize: '0.9rem',
-                      color: 'var(--color-chalk)',
+                      fontSize: '0.95rem',
+                      color: 'rgba(252,252,250,0.6)',
                       textDecoration: 'none',
                       display: 'block',
                       padding: '0.25rem 0',
                       transition: 'color 0.15s ease',
                     }}
-                    onMouseEnter={e => e.target.style.color = 'var(--color-ink)'}
-                    onMouseLeave={e => e.target.style.color = 'var(--color-chalk)'}
+                    onMouseEnter={e => e.target.style.color = '#FCFCFA'}
+                    onMouseLeave={e => e.target.style.color = 'rgba(252,252,250,0.6)'}
                   >
                     {label}
                   </Link>
@@ -132,16 +136,16 @@ export default function Footer() {
 
           {/* Social icons */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'flex-end' }}>
-            <p className="rail-label" style={{ marginBottom: '0.5rem' }}>Follow us</p>
-            <div style={{ display: 'flex', gap: '1rem' }}>
+            <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.8125rem', color: 'rgba(252,252,250,0.4)', marginBottom: '0.25rem' }}>Follow us</p>
+            <div style={{ display: 'flex', gap: '1.25rem' }}>
               <a
                 href={SITE.instagram}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Somaiya Debating Society on Instagram"
-                style={{ color: 'var(--color-chalk)', transition: 'color 0.15s ease' }}
+                style={{ color: 'rgba(252,252,250,0.5)', transition: 'color 0.15s ease' }}
                 onMouseEnter={e => e.currentTarget.style.color = 'var(--color-red)'}
-                onMouseLeave={e => e.currentTarget.style.color = 'var(--color-chalk)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(252,252,250,0.5)'}
               >
                 <InstagramIcon />
               </a>
@@ -150,9 +154,9 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Somaiya Debating Society on LinkedIn"
-                style={{ color: 'var(--color-chalk)', transition: 'color 0.15s ease' }}
-                onMouseEnter={e => e.currentTarget.style.color = 'var(--color-red)'}
-                onMouseLeave={e => e.currentTarget.style.color = 'var(--color-chalk)'}
+                style={{ color: 'rgba(252,252,250,0.5)', transition: 'color 0.15s ease' }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--color-cobalt)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(252,252,250,0.5)'}
               >
                 <LinkedInIcon />
               </a>
@@ -161,9 +165,9 @@ export default function Footer() {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Join Somaiya Debating Society WhatsApp community"
-                style={{ color: 'var(--color-chalk)', transition: 'color 0.15s ease' }}
-                onMouseEnter={e => e.currentTarget.style.color = 'var(--color-red)'}
-                onMouseLeave={e => e.currentTarget.style.color = 'var(--color-chalk)'}
+                style={{ color: 'rgba(252,252,250,0.5)', transition: 'color 0.15s ease' }}
+                onMouseEnter={e => e.currentTarget.style.color = 'var(--color-teal)'}
+                onMouseLeave={e => e.currentTarget.style.color = 'rgba(252,252,250,0.5)'}
               >
                 <WhatsAppIcon />
               </a>
@@ -171,33 +175,74 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Address */}
+        <p style={{
+          fontFamily: 'var(--font-sans)',
+          fontSize: '0.8125rem',
+          color: 'rgba(252,252,250,0.35)',
+          lineHeight: 1.6,
+          margin: '0 0 2.5rem 0',
+        }}>
+          K.J. Somaiya College of Engineering, Vidyavihar, Mumbai 400077
+        </p>
+
         {/* Hairline divider */}
-        <hr className="rule" />
+        <div style={{ borderTop: '1px solid rgba(252,252,250,0.1)', marginBottom: '1.5rem' }} />
 
         {/* Bottom bar */}
         <div
           style={{
-            paddingTop: '1.25rem',
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
             flexWrap: 'wrap',
-            gap: '0.5rem',
+            gap: '0.75rem',
           }}
         >
-          <p className="rail-label" style={{ margin: 0 }}>
+          <p style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(252,252,250,0.3)', margin: 0 }}>
             &copy; {year} Somaiya Debating Society. Est. {SITE.established}.
           </p>
-          <p className="rail-label" style={{ margin: 0 }}>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
             <a
               href={`mailto:${SITE.email}`}
-              style={{ color: 'var(--color-chalk)', textDecoration: 'none' }}
-              onMouseEnter={e => e.target.style.color = 'var(--color-ink)'}
-              onMouseLeave={e => e.target.style.color = 'var(--color-chalk)'}
+              style={{ fontFamily: 'var(--font-sans)', fontSize: '0.75rem', color: 'rgba(252,252,250,0.3)', textDecoration: 'none', transition: 'color 0.15s ease' }}
+              onMouseEnter={e => e.target.style.color = '#FCFCFA'}
+              onMouseLeave={e => e.target.style.color = 'rgba(252,252,250,0.3)'}
             >
               {SITE.email}
             </a>
-          </p>
+            <button
+              onClick={scrollToTop}
+              aria-label="Back to top"
+              style={{
+                background: 'none',
+                border: '1px solid rgba(252,252,250,0.15)',
+                borderRadius: '50%',
+                width: '36px',
+                height: '36px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: 'rgba(252,252,250,0.4)',
+                transition: 'color 0.15s ease, border-color 0.15s ease',
+                flexShrink: 0,
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.color = '#FCFCFA';
+                e.currentTarget.style.borderColor = 'rgba(252,252,250,0.4)';
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.color = 'rgba(252,252,250,0.4)';
+                e.currentTarget.style.borderColor = 'rgba(252,252,250,0.15)';
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <polyline points="18 15 12 9 6 15" />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
 

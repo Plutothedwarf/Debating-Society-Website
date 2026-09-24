@@ -37,12 +37,13 @@ export default function Navbar() {
 
   return (
     <header
+      className={scrolled ? 'glass' : ''}
       style={{
         position: 'sticky',
         top: 0,
         zIndex: 100,
-        backgroundColor: 'var(--color-paper)',
-        borderBottom: scrolled ? '1px solid var(--color-rule)' : '1px solid transparent',
+        backgroundColor: scrolled ? undefined : 'var(--color-paper)',
+        borderBottom: scrolled ? 'none' : '1px solid transparent',
         transition: 'border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease',
         boxShadow: scrolled ? '0 2px 16px rgba(23,21,18,0.06)' : 'none',
       }}
